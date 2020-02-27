@@ -42,6 +42,15 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       resized: props.defaultResized,
       currentlyResizing: false,
       skipNextSort: false,
+      // table_header_left_offset: 0,
+    }
+  }
+
+  handleTableBodyScroll = () => {
+    if (this.table_body_scroll_element.scrollLeft !== this.state.table_header_left_offset) {
+      this.setState({
+        table_header_left_offset: this.table_body_scroll_element.scrollLeft,
+      })
     }
   }
 
@@ -102,6 +111,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       expanded,
       pages,
       onExpandedChange,
+      table_header_left_offset,
       // Components
       TableComponent,
       TheadComponent,
@@ -269,6 +279,9 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           style={{
             ...theadGroupProps.style,
             minWidth: `${rowMinWidth}px`,
+            position: "relative",
+            // left: `-${this.state.table_header_left_offset}px`,
+            left: `${table_header_left_offset ? "-" + table_header_left_offset : "0"}px`
           }}
           {...theadGroupProps.rest}
         >
@@ -360,6 +373,9 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           style={{
             ...theadProps.style,
             minWidth: `${rowMinWidth}px`,
+            position: "relative",
+            // left: `-${this.state.table_header_left_offset}px`,
+            left: `${table_header_left_offset ? "-" + table_header_left_offset : "0"}px`
           }}
           {...theadProps.rest}
         >
@@ -448,6 +464,9 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           style={{
             ...theadFilterProps.style,
             minWidth: `${rowMinWidth}px`,
+            position: "relative",
+            // left: `-${this.state.table_header_left_offset}px`,
+            left: `${table_header_left_offset ? "-" + table_header_left_offset : "0"}px`
           }}
           {...theadFilterProps.rest}
         >
@@ -480,7 +499,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       const trGroupProps = getTrGroupProps(finalState, rowInfo, undefined, this)
       const trProps = _.splitProps(getTrProps(finalState, rowInfo, undefined, this))
       return (
-        <TrGroupComponent key={rowInfo.nestingPath.join('_')} {...trGroupProps}>
+        <TrGroupComponent key={rowInfo.nestingPath.join('_')} {...trGroupProps} style={{width: `${rowMinWidth}px`}}>
           <TrComponent
             className={classnames(trProps.className, row._viewIndex % 2 ? '-even' : '-odd')}
             style={trProps.style}
@@ -842,17 +861,19 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           {hasHeaderGroups ? makeHeaderGroups() : null}
           {makeHeaders()}
           {hasFilters ? makeFilters() : null}
-          <TbodyComponent
-            className={classnames(tBodyProps.className)}
-            style={{
-              ...tBodyProps.style,
-              minWidth: `${rowMinWidth}px`,
-            }}
-            {...tBodyProps.rest}
-          >
-            {pageRows.map((d, i) => makePageRow(d, i))}
-            {padRows.map(makePadRow)}
-          </TbodyComponent>
+          <div className="rt-tbody-scroll-container" ref={elm => this.table_body_scroll_element = elm} onScroll={this.handleTableBodyScroll}>
+            <TbodyComponent
+              className={classnames(tBodyProps.className)}
+              style={{
+                ...tBodyProps.style,
+                // minWidth: `${rowMinWidth}px`,
+              }}
+              {...tBodyProps.rest}
+            >
+              {pageRows.map((d, i) => makePageRow(d, i))}
+              {padRows.map(makePadRow)}
+            </TbodyComponent>
+          </div>
           {hasColumnFooter ? makeColumnFooters() : null}
         </TableComponent>
         {showPagination && showPaginationBottom ? (

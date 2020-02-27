@@ -25,7 +25,8 @@ input-select-style()
     align-items: stretch
     width: 100%
     border-collapse: collapse
-    overflow: auto
+    overflow: hidden
+    //overflow: auto
 
   .rt-thead
     flex: 1 0 auto
@@ -110,11 +111,14 @@ input-select-style()
       border-width: 10px
       margin-top: -10px
 
+  .rt-tbody-scroll-container
+    overflow: auto
+
   .rt-tbody
     flex: 99999 1 auto
     display: flex
     flex-direction: column
-    overflow: auto
+    //overflow: auto
     // z-index:0
     .rt-tr-group
       border-bottom: solid 1px alpha(black, .05)

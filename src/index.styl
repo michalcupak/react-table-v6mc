@@ -25,7 +25,8 @@ input-select-style()
     align-items: stretch
     width: 100%
     border-collapse: collapse
-    overflow: auto
+    overflow: hidden !important  // wide-table-scroll
+    //overflow: auto  // orig
 
   .rt-thead
     flex: 1 0 auto
@@ -35,6 +36,9 @@ input-select-style()
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    min-width: 0 !important // wide-table-scroll
+    overflow: hidden !important  // wide-table-scroll
+    border-right: 1px solid alpha(black, .05) // wide-table-scroll
 
     &.-headerGroups
       background: alpha(black, .03)
@@ -112,9 +116,12 @@ input-select-style()
 
   .rt-tbody
     flex: 99999 1 auto
-    display: flex
+    display: block  // Height of row is the same if there are less rows than can be displayed
+    //display: flex // orig
     flex-direction: column
     overflow: auto
+    overflow-y: scroll !important  // wide-table-scroll
+    min-width: 0 !important  // wide-table-scroll
     // z-index:0
     .rt-tr-group
       border-bottom: solid 1px alpha(black, .05)
@@ -320,3 +327,14 @@ input-select-style()
       transition: none!important
       cursor: col-resize
       user-select none
+
+
+
+/*****************************************/
+/* way the hell off screen */
+.scrollbar-measure
+  width: 100px
+  height: 100px
+  overflow: scroll
+  position: absolute
+  top: -9999px

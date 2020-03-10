@@ -6,6 +6,11 @@ export default Base =>
 
     componentDidMount () {
       this.fireFetchData()
+      this.add_scroll_listener()
+    }
+
+    add_scroll_listener () {
+      return false
     }
 
     UNSAFE_componentWillReceiveProps (nextProps, nextState) {

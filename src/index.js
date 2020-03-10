@@ -6,6 +6,8 @@ import Lifecycle from './lifecycle'
 import Methods from './methods'
 import defaultProps from './defaultProps'
 import propTypes from './propTypes'
+import scrollbar_width from './scrollbar_width'
+import ReactDOM from 'react-dom'
 
 export const ReactTableDefaults = defaultProps
 
@@ -15,6 +17,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
 
   constructor (props) {
     super()
+
+    this.scrollbarWidth = scrollbar_width()
 
     this.getResolvedState = this.getResolvedState.bind(this)
     this.getDataModel = this.getDataModel.bind(this)
@@ -43,6 +47,17 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       currentlyResizing: false,
       skipNextSort: false,
     }
+  }
+
+  add_scroll_listener () {
+    // Header scrolling
+    let theads = ReactDOM.findDOMNode(this.dataTableElement).getElementsByClassName("rt-thead")
+    let tbody = ReactDOM.findDOMNode(this.dataTableElement).getElementsByClassName("rt-tbody")[0]
+    tbody.addEventListener("scroll", () => {
+      for (let i = 0; i < theads.length; i++) {
+        theads.item(i).scrollLeft = tbody.scrollLeft
+      }
+    })
   }
 
   render () {
@@ -269,6 +284,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           style={{
             ...theadGroupProps.style,
             minWidth: `${rowMinWidth}px`,
+            width: `calc(100% - ${this.scrollbarWidth}px)`,
           }}
           {...theadGroupProps.rest}
         >
@@ -360,6 +376,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           style={{
             ...theadProps.style,
             minWidth: `${rowMinWidth}px`,
+            width: `calc(100% - ${this.scrollbarWidth}px)`,
           }}
           {...theadProps.rest}
         >
@@ -448,6 +465,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           style={{
             ...theadFilterProps.style,
             minWidth: `${rowMinWidth}px`,
+            width: `calc(100% - ${this.scrollbarWidth}px)`,
           }}
           {...theadFilterProps.rest}
         >
@@ -480,7 +498,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       const trGroupProps = getTrGroupProps(finalState, rowInfo, undefined, this)
       const trProps = _.splitProps(getTrProps(finalState, rowInfo, undefined, this))
       return (
-        <TrGroupComponent key={rowInfo.nestingPath.join('_')} {...trGroupProps}>
+        <TrGroupComponent key={rowInfo.nestingPath.join('_')} {...trGroupProps} style={{ width: `${rowMinWidth}px` }}>
           <TrComponent
             className={classnames(trProps.className, row._viewIndex % 2 ? '-even' : '-odd')}
             style={trProps.style}
@@ -824,6 +842,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
 
     const makeTable = () => (
       <div
+        ref={(element) => { this.dataTableElement = element }}
         className={classnames('ReactTable', className, rootProps.className)}
         style={{
           ...style,

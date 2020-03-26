@@ -31,7 +31,6 @@
     "build:umd": "cross-env BABEL_ENV=umd rollup -c",
     "build:umd-min": "cross-env BABEL_ENV=umd NODE_ENV=production rollup -c",
     "build:css": "rimraf react-table.css && stylus src/index.styl --compress -o react-table.css && yarn css:autoprefix",
-    "build:copy": "copy \"react-table.*\" \"D:\\_proteomika\\proteo-visualizer\\react-app\\src\\visual_components\\react-table-clones\\react-table-v6mc\\v6mc.2\\react-table.*\"",
     "css:autoprefix": "postcss --use autoprefixer react-table.css -r",
     "watch": "npm-run-all --parallel watch:*",
     "watch:js": "onchange 'src/**/*.js' -i -- yarn build:cjs",

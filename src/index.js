@@ -55,7 +55,10 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     let tbody = ReactDOM.findDOMNode(this.dataTableElement).getElementsByClassName("rt-tbody")[0]
     tbody.addEventListener("scroll", () => {
       for (let i = 0; i < theads.length; i++) {
-        theads.item(i).scrollLeft = tbody.scrollLeft
+        // Test equal parents
+        if (theads.item(i).parentNode === tbody.parentNode) {
+          theads.item(i).scrollLeft = tbody.scrollLeft
+        }
       }
     })
   }

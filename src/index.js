@@ -51,9 +51,9 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
 
   add_scroll_listener () {
     // Header scrolling
-    let theads = ReactDOM.findDOMNode(this.dataTableElement).getElementsByClassName("rt-thead")
-    let tbody = ReactDOM.findDOMNode(this.dataTableElement).getElementsByClassName("rt-tbody")[0]
-    tbody.addEventListener("scroll", () => {
+    const theads = ReactDOM.findDOMNode(this.dataTableElement).getElementsByClassName('rt-thead')
+    const tbody = ReactDOM.findDOMNode(this.dataTableElement).getElementsByClassName('rt-tbody')[0]
+    tbody.addEventListener('scroll', () => {
       for (let i = 0; i < theads.length; i++) {
         // Test equal parents
         if (theads.item(i).parentNode === tbody.parentNode) {
@@ -293,7 +293,10 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         >
           <TrComponent
             className={theadGroupTrProps.className}
-            style={theadGroupTrProps.style}
+            style={{
+              ...theadGroupTrProps.style,
+              minWidth: `${rowMinWidth}px`,
+            }}
             {...theadGroupTrProps.rest}
           >
             {headerGroups.map(makeHeaderGroup)}
@@ -385,7 +388,10 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         >
           <TrComponent
             className={theadTrProps.className}
-            style={theadTrProps.style}
+            style={{
+              ...theadTrProps.style,
+              minWidth: `${rowMinWidth}px`,
+            }}
             {...theadTrProps.rest}
           >
             {allVisibleColumns.map(makeHeader)}
@@ -474,7 +480,10 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         >
           <TrComponent
             className={theadFilterTrProps.className}
-            style={theadFilterTrProps.style}
+            style={{
+              ...theadFilterTrProps.style,
+              minWidth: `${rowMinWidth}px`,
+            }}
             {...theadFilterTrProps.rest}
           >
             {allVisibleColumns.map(makeFilter)}
@@ -845,7 +854,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
 
     const makeTable = () => (
       <div
-        ref={(element) => { this.dataTableElement = element }}
+        ref={element => { this.dataTableElement = element }}
         className={classnames('ReactTable', className, rootProps.className)}
         style={{
           ...style,
